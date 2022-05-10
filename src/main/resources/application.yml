@@ -1,0 +1,8 @@
+server:
+  port: 9000
+
+spring:
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/eladmin
+    username: root
+    password: 356615
