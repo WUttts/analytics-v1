@@ -1,4 +1,4 @@
-package com.analytics.v1.app.cmd;
+package com.analytics.v1.app.command;
 
 import com.analytics.v1.domain.point.PointInfo;
 import com.analytics.v1.domain.point.PointMeta;

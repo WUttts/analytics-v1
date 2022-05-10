@@ -25,6 +25,7 @@ public class AnalyzeController {
 
     @PostMapping("/analyze")
     public ResponseEntity<ReportVo> analyze(@RequestBody ReportQuery query) {
+        query.check();
         return ResponseEntity.ok(this.analyzesService.render(query));
     }
 }

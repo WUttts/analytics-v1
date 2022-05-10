@@ -1,4 +1,4 @@
-package com.analytics.v1.app.cmd;
+package com.analytics.v1.app.command;
 
 import com.analytics.v1.domain.dim.DimInfo;
 import com.analytics.v1.domain.dim.DimMeta;
@@ -7,6 +7,7 @@ import com.analytics.v1.infrastructure.common.exception.BadRequestException;
 import com.analytics.v1.infrastructure.gateway.DimGateway;
 import com.analytics.v1.infrastructure.gateway.TableGateway;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
  * @create 2022-05-09 4:19 下午
  * @desc
  */
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class DimExe {
@@ -44,18 +46,12 @@ public class DimExe {
         //查询对应表
         List<DimTable> list = this.tableGateway.dimTables(tableNameSet);
 
-
-        //获取查询后的表名
         HashSet<String> queryTableNameSet = new HashSet<>(list.size());
         for (DimTable dimTable : list) {
             queryTableNameSet.add(dimTable.getDimTableName());
         }
-
-        //如果有某个维度没有找到对应的表
-        if (tableNameSet.size() > queryTableNameSet.size()) {
-            tableNameSet.removeAll(queryTableNameSet);
-            throw new BadRequestException("没有找到：" + tableNameSet + "所对应的维度表");
-        }
+        //约束检查
+        checkDimAndTable(tableNameSet, queryTableNameSet);
 
         return list;
     }
@@ -75,5 +71,26 @@ public class DimExe {
             throw new BadRequestException("构造后的映射表为空");
         }
         return hashMap;
+    }
+
+    private void checkDimAndTable(Set<String> tableNameSet, Set<String> queryTableNameSet) {
+        log.info("tableNameSet:{}", tableNameSet);
+        log.info("queryTableNameSet:{}", queryTableNameSet);
+
+        if (tableNameSet.size() != queryTableNameSet.size()) {
+            if (tableNameSet.size() > queryTableNameSet.size()) {
+                tableNameSet.removeAll(queryTableNameSet);
+                throw new BadRequestException("有维度没有找到对应维度表：" + tableNameSet);
+            } else {
+                queryTableNameSet.removeAll(tableNameSet);
+                throw new BadRequestException("有维度没有找到对应维度表：" + queryTableNameSet);
+            }
+        }
+
+        for (String s : queryTableNameSet) {
+            if (!tableNameSet.contains(s)) {
+                throw new BadRequestException("所传维度的维度表和数据库对不上：" + s);
+            }
+        }
     }
 }

@@ -1,10 +1,12 @@
-package com.analytics.v1.app.cmd;
+package com.analytics.v1.app.command;
 
 import com.analytics.v1.app.assembler.ReportAssembler;
 import com.analytics.v1.client.query.ReportQuery;
 import com.analytics.v1.client.vo.ReportVo;
 import com.analytics.v1.domain.report.Report;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 /**
  * @author wutangsheng
@@ -14,7 +16,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class AnalyzeQueryExe {
 
-    public ReportVo execute(ReportQuery query) {
-        return ReportAssembler.toVo(new Report());
+    public Report execute(List<String> sql) {
+        return new Report();
     }
 }

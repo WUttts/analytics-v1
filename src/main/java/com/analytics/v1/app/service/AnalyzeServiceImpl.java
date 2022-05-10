@@ -1,14 +1,18 @@
 package com.analytics.v1.app.service;
 
-import com.analytics.v1.app.cmd.AnalyzeQueryExe;
-import com.analytics.v1.app.cmd.DimExe;
-import com.analytics.v1.app.cmd.PointExe;
+import com.analytics.v1.app.assembler.ReportAssembler;
+import com.analytics.v1.app.command.AnalyzeQueryExe;
+import com.analytics.v1.app.command.DimExe;
+import com.analytics.v1.app.command.PointExe;
 import com.analytics.v1.client.api.IAnalyzesService;
 import com.analytics.v1.client.query.ReportQuery;
 import com.analytics.v1.client.vo.ReportVo;
 import com.analytics.v1.domain.dim.DimMeta;
+import com.analytics.v1.domain.point.PointMeta;
+import com.analytics.v1.domain.report.Report;
+import com.analytics.v1.domain.sql.SQLBuilder;
+import com.analytics.v1.domain.sql.SqlMeta;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -28,6 +32,14 @@ public class AnalyzeServiceImpl implements IAnalyzesService {
     public ReportVo render(ReportQuery query) {
         DimMeta dimMeta = dimExe.execute(query.getConfigInfo().getDims());
 
-        return analyzeQueryExe.execute(query);
+        PointMeta pointMeta = pointExe.execute(query.getConfigInfo().getPoints());
+
+        SqlMeta sqlMeta = new SqlMeta(dimMeta, pointMeta);
+
+        SQLBuilder sqlBuilder = new SQLBuilder(sqlMeta);
+        sqlBuilder.builder();
+
+        Report report = analyzeQueryExe.execute(sqlBuilder.getSQLs());
+        return ReportAssembler.toVo(report);
     }
 }
