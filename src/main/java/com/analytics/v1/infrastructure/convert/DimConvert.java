@@ -21,6 +21,9 @@ public class DimConvert {
         dimInfo.setDimDescribe(dimDo.getDimDescribe());
         dimInfo.setDimRule(DimRuleEnum.KEYWORDS);
         dimInfo.setDimName(dimDo.getDimName());
+
+        dimInfo.check();
+
         return dimInfo;
     }
 

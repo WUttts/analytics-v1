@@ -2,6 +2,7 @@ package com.analytics.v1.infrastructure.gateway;
 
 import com.analytics.v1.domain.dim.DimInfo;
 import com.analytics.v1.domain.point.PointInfo;
+import com.analytics.v1.infrastructure.common.exception.BadRequestException;
 import com.analytics.v1.infrastructure.convert.DimConvert;
 import com.analytics.v1.infrastructure.convert.PointConvert;
 import com.analytics.v1.infrastructure.gateway.db.DimDo;
@@ -31,6 +32,11 @@ public class PointGateway {
         String substring = join.substring(0, join.length() - 1);
         String sql = String.format("select * from point_info where id in (%s)", substring);
         List<PointDo> pointDos = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(PointDo.class));
+
+        if (pointDos.isEmpty()) {
+            throw new BadRequestException("找不到对应指标：" + ids);
+        }
+
         return PointConvert.toDomain(pointDos);
     }
 }

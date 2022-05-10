@@ -24,6 +24,9 @@ public class PointConvert {
         pointInfo.setPointRule(pointRuleEnum);
 
         pointInfo.setPointName(pointDo.getPointName());
+
+        pointInfo.check();
+
         return pointInfo;
     }
 

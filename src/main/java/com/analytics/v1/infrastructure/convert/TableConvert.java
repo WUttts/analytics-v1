@@ -20,6 +20,9 @@ public class TableConvert {
         dimTable.setId(dimTableDo.getId());
         dimTable.setDimTableName(dimTableDo.getDimTableName());
         dimTable.setDimCountParttio(dimTableDo.getDimCountParttio());
+        //完整性检查
+        dimTable.check();
+
         return dimTable;
     }
 
@@ -36,6 +39,9 @@ public class TableConvert {
         pointTable.setId(pointTableDo.getId());
         pointTable.setPointTableName(pointTableDo.getPointTableName());
         pointTable.setPointCountParttio(pointTableDo.getPointCountParttio());
+
+        pointTable.check();
+
         return pointTable;
     }
 

@@ -2,6 +2,7 @@ package com.analytics.v1.infrastructure.gateway;
 
 import com.analytics.v1.domain.dim.DimInfo;
 import com.analytics.v1.domain.dim.DimMeta;
+import com.analytics.v1.infrastructure.common.exception.BadRequestException;
 import com.analytics.v1.infrastructure.convert.DimConvert;
 import com.analytics.v1.infrastructure.gateway.db.DimDo;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,11 @@ public class DimGateway {
         String substring = join.substring(0, join.length() - 1);
         String sql = String.format("select * from dim_info where id in (%s)", substring);
         List<DimDo> dimDos = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(DimDo.class));
+
+        if (dimDos.isEmpty()) {
+            throw new BadRequestException("找不到对应维度：" + ids);
+        }
+
         return DimConvert.toDomain(dimDos);
     }
 

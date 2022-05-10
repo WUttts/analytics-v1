@@ -3,6 +3,7 @@ package com.analytics.v1.infrastructure.gateway;
 import com.analytics.v1.domain.dim.DimTable;
 import com.analytics.v1.domain.point.PointTable;
 import com.analytics.v1.infrastructure.common.constants.TableConstant;
+import com.analytics.v1.infrastructure.common.exception.BadRequestException;
 import com.analytics.v1.infrastructure.convert.TableConvert;
 import com.analytics.v1.infrastructure.gateway.db.DimTableDo;
 import com.analytics.v1.infrastructure.gateway.db.PointTableDo;
@@ -29,6 +30,9 @@ public class TableGateway {
         String sql = format(TableConstant.DIM_TABLE, tableNames);
         List<DimTableDo> tableDos = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(DimTableDo.class));
 
+        if (tableDos.isEmpty()) {
+            throw new BadRequestException("所选的所有维度没有找到对应的表：" + tableNames);
+        }
         return TableConvert.toDimTable(tableDos);
     }
 
