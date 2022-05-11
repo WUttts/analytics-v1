@@ -28,6 +28,9 @@ public class DimExe {
     public DimMeta execute(List<Integer> ids) {
         //维度
         List<DimInfo> dims = this.dimGateway.findDim(ids);
+        if (dims.isEmpty()) {
+            return new DimMeta(new HashMap<>());
+        }
         //获取维度对应的维度表
         List<DimTable> dimTables = processDimAndTable(dims);
         //根据维度和维度表建立映射关系

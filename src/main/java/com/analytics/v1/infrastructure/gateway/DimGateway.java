@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,7 +33,7 @@ public class DimGateway {
         List<DimDo> dimDos = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(DimDo.class));
 
         if (dimDos.isEmpty()) {
-            throw new BadRequestException("找不到对应维度：" + ids);
+            return new ArrayList<>();
         }
 
         return DimConvert.toDomain(dimDos);

@@ -9,9 +9,9 @@ import java.util.Map;
  * @desc
  */
 public class DimMeta {
-    private Map<DimTable, List<DimInfo>> relationalMap;
+    private Map<DimTable, List<DimInfo>> dimRelationalMap;
 
     public DimMeta(Map<DimTable, List<DimInfo>> relationalMap) {
-        this.relationalMap = relationalMap;
+        this.dimRelationalMap = relationalMap;
     }
 }
