@@ -25,16 +25,16 @@ public class DimExe {
     private final DimGateway dimGateway;
     private final TableGateway tableGateway;
 
-    public ArrayDeque<DimMeta> execute(List<Integer> ids) {
+    public LinkedList<DimMeta> execute(List<Integer> ids) {
         //维度
         List<DimInfo> dims = this.dimGateway.findDim(ids);
         if (dims.isEmpty()) {
-            return new ArrayDeque<>();
+            return new LinkedList<>();
         }
         //获取维度对应的维度表
         List<DimTable> dimTables = processDimAndTable(dims);
         //根据维度和维度表建立映射关系
-        ArrayDeque<DimMeta> dimMetas = processMeta(dims, dimTables);
+        LinkedList<DimMeta> dimMetas = processMeta(dims, dimTables);
 
         return dimMetas;
     }
@@ -59,8 +59,8 @@ public class DimExe {
         return list;
     }
 
-    private ArrayDeque<DimMeta> processMeta(List<DimInfo> dims, List<DimTable> dimTables) {
-        ArrayDeque<DimMeta> dimMetas = new ArrayDeque<>(dimTables.size());
+    private LinkedList<DimMeta> processMeta(List<DimInfo> dims, List<DimTable> dimTables) {
+        LinkedList<DimMeta> dimMetas = new LinkedList<>();
 
         //维度，按表名分组
         Map<String, List<DimInfo>> collect = dims.stream().collect(Collectors.groupingBy(DimInfo::getDimName));

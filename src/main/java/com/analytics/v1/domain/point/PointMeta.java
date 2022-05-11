@@ -24,7 +24,7 @@ public class PointMeta implements TableMeta {
     }
 
     @Override
-    public String countParttio() {
+    public String[] countParttio() {
         return this.pointTable.getPointCountParttio();
     }
 
@@ -32,4 +32,11 @@ public class PointMeta implements TableMeta {
     public int size() {
         return this.pointInfos.size();
     }
+
+    @Override
+    public boolean check() {
+        return this.size() > 0 && this.countParttio().length > 0;
+    }
+
+
 }

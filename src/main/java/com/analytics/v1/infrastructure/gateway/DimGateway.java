@@ -1,8 +1,6 @@
 package com.analytics.v1.infrastructure.gateway;
 
 import com.analytics.v1.domain.dim.DimInfo;
-import com.analytics.v1.domain.dim.DimMeta;
-import com.analytics.v1.infrastructure.common.exception.BadRequestException;
 import com.analytics.v1.infrastructure.convert.DimConvert;
 import com.analytics.v1.infrastructure.gateway.db.DimDo;
 import lombok.RequiredArgsConstructor;

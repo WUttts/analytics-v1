@@ -13,14 +13,14 @@ import org.springframework.util.StringUtils;
 public class PointTable {
     private Integer id;
     private String pointTableName;
-    private String pointCountParttio;
+    private String[] pointCountParttio;
 
     public void check() {
-        if (!StringUtils.hasText(pointTableName)){
-            throw new BadRequestException("指标表：id:"+this.id +"的pointTableName为空");
+        if (!StringUtils.hasText(pointTableName)) {
+            throw new BadRequestException("指标表：id:" + this.id + "的pointTableName为空");
         }
-        if (!StringUtils.hasText(pointCountParttio)){
-            throw new BadRequestException("指标表：id:"+this.id +"的pointCountParttio为空!,请填写统计粒度！！");
+        if (pointCountParttio.length == 0) {
+            throw new BadRequestException("指标表：id:" + this.id + "的pointCountParttio为空!,请填写统计粒度！！");
         }
     }
 }

@@ -8,7 +8,9 @@ package com.analytics.v1.domain;
 public interface TableMeta {
     String tableName();
 
-    String countParttio();
+    String[] countParttio();
 
     int size();
+
+    boolean check();
 }

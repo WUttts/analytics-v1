@@ -8,7 +8,7 @@ package com.analytics.v1.infrastructure.common.enums;
 public enum PointRuleEnum {
     COUNT(0, "count"),
     DISTINCT_COUNT(1, "distinct_count"),
-    SUM(3, "sum");
+    SUM(2, "sum");
 
 
     private final int status;

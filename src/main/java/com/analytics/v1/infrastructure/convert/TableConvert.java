@@ -19,7 +19,7 @@ public class TableConvert {
         DimTable dimTable = new DimTable();
         dimTable.setId(dimTableDo.getId());
         dimTable.setDimTableName(dimTableDo.getDimTableName());
-        dimTable.setDimCountParttio(dimTableDo.getDimCountParttio());
+        dimTable.setDimCountParttio(dimTableDo.getDimCountParttio().split(","));
         //完整性检查
         dimTable.check();
 
@@ -38,7 +38,7 @@ public class TableConvert {
         PointTable pointTable = new PointTable();
         pointTable.setId(pointTableDo.getId());
         pointTable.setPointTableName(pointTableDo.getPointTableName());
-        pointTable.setPointCountParttio(pointTableDo.getPointCountParttio());
+        pointTable.setPointCountParttio(pointTableDo.getPointCountParttio().split(","));
 
         pointTable.check();
 

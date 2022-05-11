@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayDeque;
+import java.util.LinkedList;
 
 /**
  * @author wutangsheng
@@ -32,7 +33,7 @@ public class AnalyzeServiceImpl implements IAnalyzesService {
 
     @Override
     public ReportVo render(ReportQuery query) {
-        ArrayDeque<DimMeta> dimMetas = dimExe.execute(query.getConfigInfo().getDims());
+        LinkedList<DimMeta> dimMetas = dimExe.execute(query.getConfigInfo().getDims());
 
         ArrayDeque<PointMeta> pointMetas = pointExe.execute(query.getConfigInfo().getPoints());
 

@@ -1,9 +1,9 @@
 package com.analytics.v1.domain.dim;
 
 import com.analytics.v1.domain.TableMeta;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author wutangsheng
@@ -29,12 +29,21 @@ public class DimMeta implements TableMeta {
     }
 
     @Override
-    public String countParttio() {
+    public String[] countParttio() {
         return this.dimTable.getDimCountParttio();
     }
 
     @Override
     public int size() {
         return dimInfos.size();
+    }
+
+    @Override
+    public boolean check() {
+        return this.size() > 0 && this.countParttio().length > 0;
+    }
+
+    public List<DimInfo> getDimInfos() {
+        return dimInfos;
     }
 }
