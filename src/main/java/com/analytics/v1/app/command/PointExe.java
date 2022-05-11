@@ -25,14 +25,14 @@ public class PointExe {
     private final PointGateway pointGateway;
     private final TableGateway tableGateway;
 
-    public PointMeta execute(List<Integer> ids) {
+    public ArrayDeque<PointMeta> execute(List<Integer> ids) {
         List<PointInfo> points = this.pointGateway.findPoints(ids);
 
         List<PointTable> pointTables = processPointAndTable(points);
 
-        Map<PointTable, List<PointInfo>> map = processMeta(points, pointTables);
+        ArrayDeque<PointMeta> pointMetas = processMeta(points, pointTables);
 
-        return new PointMeta(map);
+        return pointMetas;
     }
 
     private List<PointTable> processPointAndTable(List<PointInfo> points) {
@@ -55,21 +55,23 @@ public class PointExe {
         return list;
     }
 
-    private Map<PointTable, List<PointInfo>> processMeta(List<PointInfo> points, List<PointTable> pointTables) {
-        Map<PointTable, List<PointInfo>> hashMap = new HashMap<>(pointTables.size());
+    private ArrayDeque<PointMeta> processMeta(List<PointInfo> points, List<PointTable> pointTables) {
+        ArrayDeque<PointMeta> pointMetas = new ArrayDeque<>(pointTables.size());
         //维度，按表名分组
         Map<String, List<PointInfo>> collect = points.stream().collect(Collectors.groupingBy(PointInfo::getPointName));
 
         for (PointTable pointTable : pointTables) {
             if (collect.containsKey(pointTable.getPointTableName())) {
-                hashMap.put(pointTable, collect.get(pointTable.getPointTableName()));
+                List<PointInfo> pointInfos = collect.get(pointTable.getPointTableName());
+
+                pointMetas.add(new PointMeta(pointTable, pointInfos));
             }
         }
 
-        if (hashMap.isEmpty()) {
+        if (pointMetas.isEmpty()) {
             throw new BadRequestException("构造后的映射表为空");
         }
-        return hashMap;
+        return pointMetas;
     }
 
     private void checkPointAndTable(Set<String> tableNameSet, Set<String> queryTableNameSet) {

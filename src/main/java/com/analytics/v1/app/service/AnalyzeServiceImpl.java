@@ -15,6 +15,8 @@ import com.analytics.v1.domain.sql.SqlMeta;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayDeque;
+
 /**
  * @author wutangsheng
  * @create 2022-04-29 3:34 下午
@@ -30,11 +32,11 @@ public class AnalyzeServiceImpl implements IAnalyzesService {
 
     @Override
     public ReportVo render(ReportQuery query) {
-        DimMeta dimMeta = dimExe.execute(query.getConfigInfo().getDims());
+        ArrayDeque<DimMeta> dimMetas = dimExe.execute(query.getConfigInfo().getDims());
 
-        PointMeta pointMeta = pointExe.execute(query.getConfigInfo().getPoints());
+        ArrayDeque<PointMeta> pointMetas = pointExe.execute(query.getConfigInfo().getPoints());
 
-        SqlMeta sqlMeta = new SqlMeta(dimMeta, pointMeta);
+        SqlMeta sqlMeta = new SqlMeta(dimMetas, pointMetas);
 
         SQLBuilder sqlBuilder = new SQLBuilder(sqlMeta);
         sqlBuilder.builder();

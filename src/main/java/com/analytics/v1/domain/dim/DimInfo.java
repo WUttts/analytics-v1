@@ -25,7 +25,6 @@ public class DimInfo {
         if (!StringUtils.hasText(dimDescribe)) {
             throw new BadRequestException("维度：id:" + this.id + "的dimDescribe为空");
         }
-
         if (!StringUtils.hasText(dimName)) {
             throw new BadRequestException("维度：id:" + this.id + "的dimName为空");
         }

@@ -25,18 +25,18 @@ public class DimExe {
     private final DimGateway dimGateway;
     private final TableGateway tableGateway;
 
-    public DimMeta execute(List<Integer> ids) {
+    public ArrayDeque<DimMeta> execute(List<Integer> ids) {
         //维度
         List<DimInfo> dims = this.dimGateway.findDim(ids);
         if (dims.isEmpty()) {
-            return new DimMeta(new HashMap<>());
+            return new ArrayDeque<>();
         }
         //获取维度对应的维度表
         List<DimTable> dimTables = processDimAndTable(dims);
         //根据维度和维度表建立映射关系
-        Map<DimTable, List<DimInfo>> map = processMeta(dims, dimTables);
+        ArrayDeque<DimMeta> dimMetas = processMeta(dims, dimTables);
 
-        return new DimMeta(map);
+        return dimMetas;
     }
 
     private List<DimTable> processDimAndTable(List<DimInfo> dims) {
@@ -59,21 +59,22 @@ public class DimExe {
         return list;
     }
 
-    private Map<DimTable, List<DimInfo>> processMeta(List<DimInfo> dims, List<DimTable> dimTables) {
-        Map<DimTable, List<DimInfo>> hashMap = new HashMap<>(dimTables.size());
+    private ArrayDeque<DimMeta> processMeta(List<DimInfo> dims, List<DimTable> dimTables) {
+        ArrayDeque<DimMeta> dimMetas = new ArrayDeque<>(dimTables.size());
+
         //维度，按表名分组
         Map<String, List<DimInfo>> collect = dims.stream().collect(Collectors.groupingBy(DimInfo::getDimName));
 
         for (DimTable dimTable : dimTables) {
             if (collect.containsKey(dimTable.getDimTableName())) {
-                hashMap.put(dimTable, collect.get(dimTable.getDimTableName()));
+                dimMetas.add(new DimMeta(dimTable, collect.get(dimTable.getDimTableName())));
             }
         }
 
-        if (hashMap.isEmpty()) {
+        if (dimMetas.isEmpty()) {
             throw new BadRequestException("构造后的映射表为空");
         }
-        return hashMap;
+        return dimMetas;
     }
 
     private void checkDimAndTable(Set<String> tableNameSet, Set<String> queryTableNameSet) {
