@@ -38,5 +38,7 @@ public class PointMeta implements TableMeta {
         return this.size() > 0 && this.countParttio().length > 0;
     }
 
-
+    public List<PointInfo> getPointInfos() {
+        return pointInfos;
+    }
 }

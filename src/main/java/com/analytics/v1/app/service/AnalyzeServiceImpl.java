@@ -10,12 +10,14 @@ import com.analytics.v1.client.vo.ReportVo;
 import com.analytics.v1.domain.dim.DimMeta;
 import com.analytics.v1.domain.point.PointMeta;
 import com.analytics.v1.domain.report.Report;
-import com.analytics.v1.domain.sql.SQLBuilder;
+import com.analytics.v1.domain.report.UnionData;
 import com.analytics.v1.domain.sql.SqlMeta;
+import com.analytics.v1.domain.sql.SqlMetaBuilder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
@@ -33,16 +35,22 @@ public class AnalyzeServiceImpl implements IAnalyzesService {
 
     @Override
     public ReportVo render(ReportQuery query) {
+        //校验、处理维度和指标
         LinkedList<DimMeta> dimMetas = dimExe.execute(query.getConfigInfo().getDims());
-
         ArrayDeque<PointMeta> pointMetas = pointExe.execute(query.getConfigInfo().getPoints());
 
-        SqlMeta sqlMeta = new SqlMeta(dimMetas, pointMetas);
+        //构造sql
+        SqlMetaBuilder sqlMetaBuilder = new SqlMetaBuilder(dimMetas, pointMetas);
+        LinkedList<SqlMeta> sqlMetas = sqlMetaBuilder.builder();
 
-        SQLBuilder sqlBuilder = new SQLBuilder(sqlMeta);
-        sqlBuilder.builder();
+        //执行sql查询，并预处理
+        ArrayList<UnionData> unionDatas = new ArrayList<>(sqlMetas.size());
+        for (SqlMeta sqlMeta : sqlMetas) {
+            unionDatas.add(analyzeQueryExe.execute(sqlMeta));
+        }
 
-        Report report = analyzeQueryExe.execute(sqlBuilder.getSQLs());
+        //构造最终结果
+        Report report = new Report(unionDatas);
         return ReportAssembler.toVo(report);
     }
 }

@@ -23,7 +23,8 @@ import java.util.Set;
 @Repository
 @RequiredArgsConstructor
 public class TableGateway {
-    private static final String SELECT_WHERE_IN_SQL = "select * from %s where id in (%s)";
+    private static final String SELECT_DIM_WHERE_IN_SQL = "select * from %s where dim_table_name in (%s)";
+    private static final String SELECT_POINT_WHERE_IN_SQL = "select * from %s where point_table_name in (%s)";
     private final JdbcTemplate jdbcTemplate;
 
     public List<DimTable> dimTables(Set<String> tableNames) {
@@ -38,7 +39,7 @@ public class TableGateway {
 
 
     public List<PointTable> pointsTables(Set<String> tableNames) {
-        String sql = format(TableConstant.DIM_TABLE, tableNames);
+        String sql = format(TableConstant.POINT_TABLE, tableNames);
         List<PointTableDo> tableDos = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(PointTableDo.class));
 
         return TableConvert.toPointTable(tableDos);
@@ -48,9 +49,12 @@ public class TableGateway {
     private String format(String db, Set<String> tableNames) {
         StringBuilder join = new StringBuilder();
         for (String name : tableNames) {
-            join.append(name).append(",");
+            join.append("'").append(name).append("'").append(",");
         }
         String substring = join.substring(0, join.length() - 1);
-        return String.format(TableGateway.SELECT_WHERE_IN_SQL, db, substring);
+        if (db.equals(TableConstant.DIM_TABLE)) {
+            return String.format(TableGateway.SELECT_DIM_WHERE_IN_SQL, db, substring);
+        }
+        return String.format(TableGateway.SELECT_POINT_WHERE_IN_SQL, db, substring);
     }
 }

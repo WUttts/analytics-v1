@@ -1,12 +1,11 @@
 package com.analytics.v1.app.command;
 
-import com.analytics.v1.app.assembler.ReportAssembler;
-import com.analytics.v1.client.query.ReportQuery;
-import com.analytics.v1.client.vo.ReportVo;
 import com.analytics.v1.domain.report.Report;
+import com.analytics.v1.domain.report.UnionData;
+import com.analytics.v1.domain.sql.SqlMeta;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import java.util.LinkedList;
 
 /**
  * @author wutangsheng
@@ -16,7 +15,7 @@ import java.util.List;
 @Component
 public class AnalyzeQueryExe {
 
-    public Report execute(List<String> sql) {
-        return new Report();
+    public UnionData execute(SqlMeta sqlMetas) {
+        return new UnionData();
     }
 }
