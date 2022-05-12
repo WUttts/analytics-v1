@@ -81,16 +81,16 @@ public class PointExe {
         if (tableNameSet.size() != queryTableNameSet.size()) {
             if (tableNameSet.size() > queryTableNameSet.size()) {
                 tableNameSet.removeAll(queryTableNameSet);
-                throw new BadRequestException("有维度没有找到对应维度表：" + tableNameSet);
+                throw new BadRequestException("有指标没有找到对应指标表：" + tableNameSet);
             } else {
                 queryTableNameSet.removeAll(tableNameSet);
-                throw new BadRequestException("有维度没有找到对应维度表：" + queryTableNameSet);
+                throw new BadRequestException("有指标没有找到对应维度表：" + queryTableNameSet);
             }
         }
 
         for (String s : queryTableNameSet) {
             if (!tableNameSet.contains(s)) {
-                throw new BadRequestException("所传维度的维度表和数据库对不上：" + s);
+                throw new BadRequestException("所传指标的指标表和数据库对不上：" + s);
             }
         }
     }

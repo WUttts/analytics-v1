@@ -19,7 +19,7 @@ import java.util.LinkedList;
 public class AnalyzeQueryExe {
     @Autowired
     @Qualifier("adbJdbcTemplate")
-    private JdbcTemplate jdbcTemplate;
+    private JdbcTemplate adbTemplate;
 
     public UnionData execute(SqlMeta sqlMetas) {
         return new UnionData();
