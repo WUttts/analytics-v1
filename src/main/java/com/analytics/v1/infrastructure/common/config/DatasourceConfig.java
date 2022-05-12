@@ -50,7 +50,8 @@ public class DatasourceConfig {
         return new JdbcTemplate(storyDataSource);
     }
 
-    @Bean("adbDataSource")
+    @Bean("adbJdbcTemplate")
+    @DependsOn("adbDataSource")
     public JdbcTemplate adbJdbcTemplate(@Qualifier("adbDataSource") DataSource adbDataSource) {
         return new JdbcTemplate(adbDataSource);
     }
