@@ -54,7 +54,7 @@ public class SqlMetaBuilder {
         while (this.hasPoint()) {
             this.pointMeta = pointMetas.poll();
             if (this.validation()) {
-                String sql = this.select() + this.from() + this.where();
+                String sql = this.select() + this.from() + this.where() + this.groupBy();
                 sqlList.add(new SqlMeta(sql, allDims, this.pointMeta.getPointInfos()));
             }
         }
@@ -104,7 +104,7 @@ public class SqlMetaBuilder {
 
 
     private String where() {
-        return "";
+        return "\n";
     }
 
 
@@ -113,19 +113,14 @@ public class SqlMetaBuilder {
             return "";
         }
         StringBuilder builder = new StringBuilder();
-        builder.append(" group by ").append("\n");
-        int flag = dimMetas.size() - 1;
+        builder.append("group by ").append("\n");
         for (DimMeta dimMeta : this.dimMetas) {
             for (DimInfo dimInfo : dimMeta.getDimInfos()) {
-                if (flag != 0) {
-                    builder.append(dimMeta.tableName()).append(".").append(dimInfo.getDimName()).append(",").append("\n");
-                    flag--;
-                    continue;
-                }
-                builder.append(dimMeta.tableName()).append(".").append(dimInfo.getDimName()).append(";");
+                builder.append(dimMeta.tableName()).append(".").append(dimInfo.getDimFieldName()).append(",").append("\n");
             }
         }
-        return builder.toString();
+        String substring = builder.substring(0, builder.length() - 2);
+        return substring + " ;";
     }
 
     private String dimSelect() {
@@ -170,10 +165,9 @@ public class SqlMetaBuilder {
     private String join() {
         StringBuilder builder = new StringBuilder();
         for (DimMeta dimMeta : dimMetas) {
-            builder.append(" LEFT JOIN ").append(dimMeta.tableName()).append(" AS ").append(dimMeta.tableName()).append("\n");
+            builder.append("left join ").append(dimMeta.tableName()).append(" AS ").append(dimMeta.tableName()).append("\n");
+            builder.append(on(dimMeta));
         }
-        String on = on();
-        builder.append(on);
         return builder.toString();
     }
 
@@ -182,13 +176,10 @@ public class SqlMetaBuilder {
      *
      * @return
      */
-    private String on() {
+    private String on(DimMeta dimMeta) {
         List<String> list1 = Arrays.asList(this.pointMeta.countParttio());
         List<String> list2 = new ArrayList<>();
-        for (DimMeta dimMeta : this.dimMetas) {
-            Collections.addAll(list2, dimMeta.countParttio());
-        }
-
+        Collections.addAll(list2, dimMeta.countParttio());
         //求交集
         list2.retainAll(list1);
         //去重
@@ -196,24 +187,9 @@ public class SqlMetaBuilder {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("on").append(" ");
         int flag = 0;
-        for (DimMeta dimMeta : this.dimMetas) {
-            for (String granularity : set) {
-                if (flag == 0) {
-                    stringBuilder.append(this.pointMeta.tableName())
-                            .append(".")
-                            .append(granularity)
-                            .append("=")
-                            .append(" ")
-                            .append(dimMeta.tableName())
-                            .append(".")
-                            .append(granularity)
-                            .append(" ")
-                            .append("\n");
-                    flag++;
-                    continue;
-                }
-                stringBuilder.append("and ")
-                        .append(this.pointMeta.tableName())
+        for (String granularity : set) {
+            if (flag == 0) {
+                stringBuilder.append(this.pointMeta.tableName())
                         .append(".")
                         .append(granularity)
                         .append("=")
@@ -223,9 +199,23 @@ public class SqlMetaBuilder {
                         .append(granularity)
                         .append(" ")
                         .append("\n");
-
+                flag++;
+                continue;
             }
+            stringBuilder.append("and ")
+                    .append(this.pointMeta.tableName())
+                    .append(".")
+                    .append(granularity)
+                    .append("=")
+                    .append(" ")
+                    .append(dimMeta.tableName())
+                    .append(".")
+                    .append(granularity)
+                    .append(" ")
+                    .append("\n");
+
         }
+
         return stringBuilder.toString();
     }
 

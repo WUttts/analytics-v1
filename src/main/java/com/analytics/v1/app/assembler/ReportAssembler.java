@@ -10,6 +10,7 @@ import com.analytics.v1.domain.report.Report;
  */
 public class ReportAssembler {
     public static ReportVo toVo(Report report) {
-        return new ReportVo();
+        ReportVo reportVo = new ReportVo();
+        return reportVo;
     }
 }

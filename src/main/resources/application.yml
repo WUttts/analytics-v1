@@ -3,6 +3,13 @@ server:
 
 spring:
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/eladmin
-    username: root
-    password: wts15085250704
+    sys:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://127.0.0.1:3306/eladmin
+      username: root
+      password: wts15085250704
+    adb:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://127.0.0.1:3306/adb
+      username: root
+      password: wts15085250704
