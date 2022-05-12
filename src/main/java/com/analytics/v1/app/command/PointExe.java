@@ -76,6 +76,7 @@ public class PointExe {
 
     private void checkPointAndTable(Set<String> tableNameSet, Set<String> queryTableNameSet) {
         log.info("tableNameSet:{}", tableNameSet);
+
         log.info("queryTableNameSet:{}", queryTableNameSet);
 
         if (tableNameSet.size() != queryTableNameSet.size()) {
