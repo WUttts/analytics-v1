@@ -9,6 +9,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author wutangsheng
@@ -21,7 +23,10 @@ public class AnalyzeQueryExe {
     @Qualifier("adbJdbcTemplate")
     private JdbcTemplate adbTemplate;
 
-    public UnionData execute(SqlMeta sqlMetas) {
+    public UnionData execute(SqlMeta sqlMeta) {
+        String sql = sqlMeta.getSql();
+        List<Map<String, Object>> maps = adbTemplate.queryForList(sql);
+        System.out.println(maps);
         return new UnionData();
     }
 }

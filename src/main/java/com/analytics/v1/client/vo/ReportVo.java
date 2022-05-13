@@ -16,5 +16,7 @@ import java.util.List;
  */
 @Data
 public class ReportVo implements Serializable {
-    private List<SqlMeta> sqlMetas;
+    private List<String> tableHead;
+
+    private List<String> data;
 }

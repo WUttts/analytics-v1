@@ -51,9 +51,6 @@ public class AnalyzeServiceImpl implements IAnalyzesService {
 
         //构造最终结果
         Report report = new Report(unionDatas);
-        ReportVo reportVo = new ReportVo();
-        reportVo.setSqlMetas(sqlMetas);
-//        return ReportAssembler.toVo(report);
-        return reportVo;
+        return ReportAssembler.toVo(report);
     }
 }

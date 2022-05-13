@@ -46,8 +46,8 @@ public class DatasourceConfig {
 
     @Bean
     @DependsOn("sysDataSource")
-    public JdbcTemplate jdbcTemplate(@Qualifier("sysDataSource") DataSource storyDataSource) {
-        return new JdbcTemplate(storyDataSource);
+    public JdbcTemplate jdbcTemplate(@Qualifier("sysDataSource") DataSource dataSource) {
+        return new JdbcTemplate(dataSource);
     }
 
     @Bean("adbJdbcTemplate")
