@@ -15,11 +15,11 @@ import java.io.Serializable;
 @ToString
 @EqualsAndHashCode
 public class Alias {
-    private final String columnName;
-    private final Serializable columnComment;
+    private final String column_name;
+    private final String column_comment;
 
-    public Alias(String columnName, Serializable columnComment) {
-        this.columnName = columnName;
-        this.columnComment = columnComment;
+    public Alias(String columnName, String columnComment) {
+        this.column_name = columnName;
+        this.column_comment = columnComment;
     }
 }
