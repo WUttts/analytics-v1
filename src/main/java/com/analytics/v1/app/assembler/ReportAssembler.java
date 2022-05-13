@@ -11,6 +11,8 @@ import com.analytics.v1.domain.report.Report;
 public class ReportAssembler {
     public static ReportVo toVo(Report report) {
         ReportVo reportVo = new ReportVo();
+        reportVo.setTableHead(report.tableHead());
+        reportVo.setData(report.data());
         return reportVo;
     }
 }
